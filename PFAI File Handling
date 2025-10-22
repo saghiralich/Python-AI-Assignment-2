@@ -1,0 +1,56 @@
+import os, csv
+
+if not os.path.exists("Student"):
+    os.mkdir("Student")
+
+print("1.Report")
+print("2.Results")
+ch = input("Enter 1 or 2: ")
+
+if ch == "1":
+    name = input("Enter student name: ")
+    path = "Student/" + name + ".txt"
+    print("Enter report lines (type 'exit' to finish):")
+    f = open(path, "a", encoding="utf-8")
+    while True:
+        line = input()
+        if line.lower() == "exit":
+            break
+        f.write(line + "\n")
+    f.close()
+    print("\nReport Saved. Content:\n")
+    f = open(path, "r", encoding="utf-8")
+    print(f.read())
+    f.close()
+
+elif ch == "2":
+    path = "Student/results.csv"
+    if not os.path.exists(path):
+        f = open(path, "w", newline="", encoding="utf-8")
+        w = csv.writer(f)
+        w.writerow(["Name","A","B","C","D","E","Total","Average"])
+        f.close()
+    name = input("Enter student name: ")
+    marks = []
+    for i in range(5):
+        while True:
+            try:
+                m = float(input(f"Enter marks for Subject {i+1} (0-100): "))
+                if 0 <= m <= 100:
+                    marks.append(m)
+                    break
+                else:
+                    print("Marks must be between 0 and 100.")
+            except:
+                print("Invalid input.")
+    total = sum(marks)
+    avg = total / 5
+    f = open(path, "a", newline="", encoding="utf-8")
+    w = csv.writer(f)
+    w.writerow([name]+marks+[total, round(avg,2)])
+    f.close()
+    print("\nRecord added successfully for", name)
+    print("Total:", total, "Average:", round(avg,2))
+
+else:
+    print("Invalid choice.")
